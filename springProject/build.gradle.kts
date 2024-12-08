@@ -18,9 +18,18 @@ repositories {
 }
 
 dependencies {
-	implementation("org.springframework.boot:spring-boot-starter")
+	implementation("org.springframework.boot:spring-boot-starter-web")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+
+	compileOnly("org.projectlombok:lombok")
+	annotationProcessor ("org.projectlombok:lombok")
+	implementation("org.springframework.boot:spring-boot-starter-security")
+	implementation ("org.springframework.boot:spring-boot-starter-data-jpa")
+	runtimeOnly ("org.postgresql:postgresql")
+	implementation("io.jsonwebtoken:jjwt:0.12.6")
+
+
 }
 
 tasks.withType<Test> {
