@@ -53,7 +53,7 @@ Future<void> signIn({
           break;
         case DioExceptionType.badResponse:
           errorMessage = 'Received invalid status code: ${e.response?.statusCode}';
-          break;        
+          break;
         case DioExceptionType.cancel:
           errorMessage = 'Request to API server was cancelled';
           break;
@@ -122,7 +122,7 @@ Future<void> signUp({
           break;
         case DioExceptionType.badResponse:
           errorMessage = 'Received invalid status code: ${e.response?.statusCode}';
-          break;        
+          break;
         case DioExceptionType.cancel:
           errorMessage = 'Request to API server was cancelled';
           break;

@@ -1,4 +1,4 @@
-import 'dart:math';
+
 
 import 'package:finflow/fin_flow_app.dart';
 import 'package:flutter/material.dart';
@@ -14,23 +14,27 @@ class ChooseCategory extends StatefulWidget {
 
 class _ChooseCategoryState extends State<ChooseCategory> {
   late List<Category> categories;
-  late var className;
-  // List<Category> expenses = Expenses.instance.expenses;
-  // List<Category> income = Income.instance.income;
+  List<Category> expenses = Expenses.instance.expenses;
+  List<Category> income = Income.instance.income;
+  List<Transaction> history = History.instance.history;
   final Category addCategory = Category('Add category', 0);
 
   late double value;
+  late String comment;
 
   @override
   void initState() {
     super.initState();
-    categories.remove(addCategory);
-    categories.add(addCategory);
+    expenses.remove(addCategory);
+    expenses.add(addCategory);
+    income.remove(addCategory);
+    income.add(addCategory);
   }
 
   @override
   void dispose() {
-    categories.remove(addCategory);
+    expenses.remove(addCategory);
+    income.remove(addCategory);
     super.dispose();
   }
 
@@ -39,14 +43,15 @@ class _ChooseCategoryState extends State<ChooseCategory> {
     final routeName = ModalRoute.of(context)!.settings.name;
     if (routeName == '/add_expenses/category') {
       categories = Expenses.instance.expenses;
-      className = Expenses;
+      // className = Expenses;
     } else {
       categories = Income.instance.income;
-      className = Income;
+      // className = Income;
     }
     final Object? args = ModalRoute.of(context)?.settings.arguments;
-    if (args != null && args is double) {
-      value = args;
+    if (args != null && args is Map<String, dynamic>) {
+      value = args["value"];
+      comment = args["comment"];
     }
     return Scaffold(
       appBar: AppBar(
@@ -116,10 +121,19 @@ class _ChooseCategoryState extends State<ChooseCategory> {
     // expenses.remove(addCategory);
     //expenses.removeLast();
     if (cellContent == 'Add category') {
+      Map<String, dynamic> args = {
+        'value': value,
+        'comment': comment,
+      };
       Navigator.of(context).pushNamed('${ModalRoute.of(context)!.settings.name}/add_category',
-          arguments: value);
+          arguments: args);
     } else {
-      className.addValueByName(cellContent, value);
+      if (ModalRoute.of(context)!.settings.name == '/add_expenses/category') {
+        Expenses.instance.addValueByName(cellContent, value);
+      } else {
+        Income.instance.addValueByName(cellContent, value);
+      }
+      history.add(Transaction(cellContent, value, DateTime.now(), comment));
       Navigator.of(context).pushNamed('/');
     }
   }

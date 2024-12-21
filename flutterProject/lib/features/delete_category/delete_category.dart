@@ -12,8 +12,11 @@ class DeleteCategory extends StatefulWidget {
 
 class _DeleteCategoryState extends State<DeleteCategory> with SingleTickerProviderStateMixin {
   List<Category> expenses = Expenses.instance.expenses;
+  List<Category> income = Income.instance.income;
+  late List<Category> categories;
   late AnimationController _controller;
   late Animation<double> _animation;
+  final Category addCategory = Category('Add category', 0);
 
   @override
   void initState() {
@@ -23,16 +26,28 @@ class _DeleteCategoryState extends State<DeleteCategory> with SingleTickerProvid
       vsync: this,
     )..repeat(reverse: true);
     _animation = Tween<double>(begin: -0.05, end: 0.05).animate(_controller);
+    expenses.remove(addCategory);
+    income.remove(addCategory);
   }
 
   @override
   void dispose() {
     _controller.dispose();
+    expenses.remove(addCategory);
+    income.remove(addCategory);
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final routeName = ModalRoute.of(context)!.settings.name;
+    if (routeName == '/delete_category_expenses') {
+      categories = Expenses.instance.expenses;
+      // className = Expenses;
+    } else {
+      categories = Income.instance.income;
+      // className = Income;
+    }
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
@@ -46,7 +61,7 @@ class _DeleteCategoryState extends State<DeleteCategory> with SingleTickerProvid
                 color: const Color(0xfffef7ff),
                 width: 3,
               ),
-              children: _buildTableRows(expenses, cellWidth),
+              children: _buildTableRows(categories, cellWidth),
             ),
           );
         },
@@ -81,7 +96,7 @@ class _DeleteCategoryState extends State<DeleteCategory> with SingleTickerProvid
       animation: _animation,
       builder: (context, child) {
         return Transform.rotate(
-          angle: _animation.value, // Вращение ячейки
+          angle: _animation.value,
           child: GestureDetector(
             onTap: () => _onCellTapped(cellContent),
             child: Container(
@@ -103,7 +118,7 @@ class _DeleteCategoryState extends State<DeleteCategory> with SingleTickerProvid
 
   void _onCellTapped(String cellContent) {
     setState(() {
-      expenses.removeWhere((category) => category.name == cellContent);
+      categories.removeWhere((category) => category.name == cellContent);
     });
 
     Navigator.of(context).pushNamed('/');

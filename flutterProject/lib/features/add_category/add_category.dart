@@ -13,8 +13,10 @@ class AddCategory extends StatefulWidget {
 class _AddCategoryState extends State<AddCategory> {
   List<Category> expenses = Expenses.instance.expenses;
   List<Category> income = Income.instance.income;
+  List<Transaction> history = History.instance.history;
 
   late double value;
+  late String comment;
 
   final TextEditingController _controller = TextEditingController();
 
@@ -22,8 +24,9 @@ class _AddCategoryState extends State<AddCategory> {
   Widget build(BuildContext context) {
     final routeName = ModalRoute.of(context)!.settings.name;
     final Object? args = ModalRoute.of(context)?.settings.arguments;
-    if (args != null && args is double) {
-      value = args;
+    if (args != null && args is Map<String, dynamic>) {
+      value = args["value"];
+      comment = args["comment"];
     }
     return Scaffold(
       appBar: AppBar(
@@ -41,14 +44,30 @@ class _AddCategoryState extends State<AddCategory> {
             onPressed: () {
               String? categoryName = _controller.text;
               if (categoryName != '') {
+                bool containsName = false;
                 if (routeName == '/add_expenses/category/add_category') {
-                  expenses.add(Category(categoryName, 0));
+                  for (var i in expenses) {
+                    if (i.name == categoryName) {
+                      containsName = true;
+                    }
+                  }
+                  if (!containsName) {
+                    expenses.add(Category(categoryName, 0));
+                  }
                   Expenses.instance.addValueByName(categoryName, value);
                 }
-                if (routeName == '/add_expenses/category/add_category') {
-                  income.add(Category(categoryName, 0));
+                if (routeName == '/add_income/category/add_category') {
+                  for (var i in income) {
+                    if (i.name == categoryName) {
+                      containsName = true;
+                    }
+                  }
+                  if (!containsName) {
+                    income.add(Category(categoryName, 0));
+                  }
                   Income.instance.addValueByName(categoryName, value);
                 }
+                history.add(Transaction(categoryName, value, DateTime.now(), comment));
                 Navigator.of(context).pushNamed('/');
               } else {
                 showDialog(
