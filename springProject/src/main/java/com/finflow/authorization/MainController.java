@@ -10,7 +10,7 @@ import java.security.Principal;
 @RequestMapping("/secured")
 public class MainController {
     @GetMapping("/user")
-    public String userAccess(Principal principal) { //TODO can't debug
+    public String userAccess(Principal principal) {
         if (principal == null) {
             return null;
         }

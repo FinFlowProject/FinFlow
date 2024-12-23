@@ -130,10 +130,11 @@ class _ChooseCategoryState extends State<ChooseCategory> {
     } else {
       if (ModalRoute.of(context)!.settings.name == '/add_expenses/category') {
         Expenses.instance.addValueByName(cellContent, value);
+        history.add(Transaction(cellContent, 'expenses', value, DateTime.now(), comment));
       } else {
         Income.instance.addValueByName(cellContent, value);
+        history.add(Transaction(cellContent, 'income', value, DateTime.now(), comment));
       }
-      history.add(Transaction(cellContent, value, DateTime.now(), comment));
       Navigator.of(context).pushNamed('/');
     }
   }

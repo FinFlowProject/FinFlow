@@ -1,3 +1,4 @@
+import 'package:finflow/features/local_storage/save_data.dart';
 import 'package:finflow/fin_flow_app.dart';
 import 'package:flutter/material.dart';
 
@@ -73,6 +74,8 @@ class _AddCategoryState extends State<AddCategory> {
                   } else {
                     Expenses.instance.addValueByName(categoryName, value);
                   }
+                  saveCategory(Category(categoryName, value));
+                  history.add(Transaction(categoryName, 'expenses', value, DateTime.now(), comment));
                 }
                 if (routeName == '/add_income/category/add_category') {
                   for (var i in income) {
@@ -84,8 +87,9 @@ class _AddCategoryState extends State<AddCategory> {
                     income.add(Category(categoryName, 0));
                   }
                   Income.instance.addValueByName(categoryName, value);
+                  saveCategory(Category(categoryName, value));
+                  history.add(Transaction(categoryName, 'income', value, DateTime.now(), comment));
                 }
-                history.add(Transaction(categoryName, value, DateTime.now(), comment));
                 Navigator.of(context).pushNamed('/');
               } else {
                 showDialog(

@@ -7,12 +7,12 @@ class LastTransactionDetails extends StatelessWidget {
   final String comment;
 
   const LastTransactionDetails({
-    Key? key,
+    super.key,
     required this.category,
     required this.amount,
     required this.dateTime,
     required this.comment,
-  }) : super(key: key);
+  });
 
 
   String formatDateTime(DateTime dateTime) {
@@ -47,7 +47,7 @@ class LastTransactionDetails extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              'Date: ${formattedDate}',
+              'Date: $formattedDate',
               style: const TextStyle(fontSize: 16),
             ),
             const SizedBox(height: 8),

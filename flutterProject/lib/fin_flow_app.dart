@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:finflow/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:finflow/routes/routes.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Category {
   String name;
@@ -16,6 +19,11 @@ class Category {
 
   @override
   int get hashCode => name.hashCode ^ value.hashCode;
+
+  Map<String, dynamic> toJson() => {
+    'name': name,
+    'value': value,
+  };
 }
 
 class Expenses {
@@ -86,11 +94,45 @@ class History {
 }
 
 class Transaction {
-  final String category;
-  final double amount;
-  final DateTime dateTime;
-  final String comment;
-  Transaction(this.category, this.amount, this.dateTime, this.comment);
+  String categoryName;
+  String type;
+  double amount;
+  DateTime transactionDate;
+  String description;
+
+  Transaction(this.categoryName, this.type, this.amount, this.transactionDate, this.description);
+
+  factory Transaction.fromJson(Map<String, dynamic> json) {
+    return Transaction(
+      json['categoryName'] as String,
+      json['type'] as String,
+      (json['amount'] as num).toDouble(),
+      (json['transactionDate']).toIso8601String(),
+      json['description'] as String,
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+    'categoryName': categoryName,
+    'type': type,
+    'amount': amount,
+    'transactionDate': transactionDate,
+    'description': description,
+  };
+}
+
+Future<void> saveTransaction(Transaction transaction) async {
+  final prefs = await SharedPreferences.getInstance();
+  List<String>? transactions = prefs.getStringList('transactions') ?? [];
+  transactions.add(jsonEncode(transaction.toJson()));
+  await prefs.setStringList('transactions', transactions);
+}
+
+Future<void> deleteTransaction(Transaction transaction) async {
+  final prefs = await SharedPreferences.getInstance();
+  List<String>? transactions = prefs.getStringList('transactions') ?? [];
+  transactions.remove(jsonEncode(transaction.toJson()));
+  await prefs.setStringList('transactions', transactions);
 }
 
 class FinFlow extends StatelessWidget {

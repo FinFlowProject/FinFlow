@@ -1,3 +1,4 @@
+import 'package:finflow/features/local_storage/save_data.dart';
 import 'package:finflow/fin_flow_app.dart';
 import 'package:flutter/material.dart';
 
@@ -118,6 +119,8 @@ class _DeleteCategoryState extends State<DeleteCategory> with SingleTickerProvid
 
   void _onCellTapped(String cellContent) {
     setState(() {
+      final categoryToDelete = categories.firstWhere((category) => category.name == cellContent);
+      deleteCategory(categoryToDelete);
       categories.removeWhere((category) => category.name == cellContent);
     });
 

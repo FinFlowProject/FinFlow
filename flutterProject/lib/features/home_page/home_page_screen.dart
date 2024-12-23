@@ -1,3 +1,4 @@
+import 'package:finflow/features/local_storage/save_data.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
@@ -18,6 +19,7 @@ class _HomePageState extends State<HomePage> {
   List<Category> income = Income.instance.income;
   List<Transaction> history = History.instance.history;
   late List<Category> categories;
+  List<CategoryNew> categoriesNew = [];
 
   String lastCategory = '';
   double lastAmount = 0;
@@ -29,10 +31,10 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     if (history.isNotEmpty) {
       final lastTransaction = history.last;
-      lastCategory = lastTransaction.category;
+      lastCategory = lastTransaction.categoryName;
       lastAmount = lastTransaction.amount;
-      lastDateTime = lastTransaction.dateTime;
-      lastComment = lastTransaction.comment;
+      lastDateTime = lastTransaction.transactionDate;
+      lastComment = lastTransaction.description;
     } else {
       lastCategory = 'No Category';
       lastAmount = 0;
@@ -47,6 +49,19 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         title: Text(widget.title),
         automaticallyImplyLeading: false,
+        leading: IconButton(
+          icon: const Icon(Icons.sync),
+          onPressed: () async {
+            List<CategoryNew> categoriesNew = mergeCategories(expenses, income);
+            final lastChangeDate = DateTime.now();
+            await sendPatchRequest(
+              context: context,
+              lastChangeDate: lastChangeDate,
+              addedCategories: categoriesNew,
+              addedTransactions: history,
+            );
+          },
+        ),
         actions: [
           IconButton(
             onPressed: () {

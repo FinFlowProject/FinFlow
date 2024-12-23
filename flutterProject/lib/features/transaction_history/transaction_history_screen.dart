@@ -5,7 +5,7 @@ class TransactionsHistory extends StatelessWidget {
   // final List<Transaction> history;
   final String title;
 
-  const TransactionsHistory({Key? key, required this.title}) : super(key: key);
+  const TransactionsHistory({super.key, required this.title});
 
   String formatDateTime(DateTime dateTime) {
     String twoDigits(int n) => n.toString().padLeft(2, '0');
@@ -28,15 +28,15 @@ class TransactionsHistory extends StatelessWidget {
         itemCount: history.length,
         itemBuilder: (context, index) {
           final transaction = history[history.length - index - 1];
-          String formattedDate = formatDateTime(transaction.dateTime);
+          String formattedDate = formatDateTime(transaction.transactionDate);
           return ListTile(
-            title: Text(transaction.category),
+            title: Text(transaction.categoryName),
             subtitle: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text('Amount: ${transaction.amount.toStringAsFixed(2)}'),
                 Text('Date: $formattedDate'),
-                Text('Comment: ${transaction.comment}'),
+                Text('Comment: ${transaction.description}'),
               ],
             ),
           );
