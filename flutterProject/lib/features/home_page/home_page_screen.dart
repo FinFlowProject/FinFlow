@@ -1,3 +1,4 @@
+import 'package:finflow/features/local_storage/retrieve_data.dart';
 import 'package:finflow/features/local_storage/save_data.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +18,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   List<Category> expenses = Expenses.instance.expenses;
   List<Category> income = Income.instance.income;
+  late List<Category> a;
   List<Transaction> history = History.instance.history;
   late List<Category> categories;
   List<CategoryNew> categoriesNew = [];
@@ -29,22 +31,56 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    if (history.isNotEmpty) {
-      final lastTransaction = history.last;
-      lastCategory = lastTransaction.categoryName;
-      lastAmount = lastTransaction.amount;
-      lastDateTime = lastTransaction.transactionDate;
-      lastComment = lastTransaction.description;
-    } else {
-      lastCategory = 'No Category';
-      lastAmount = 0;
-      lastDateTime = DateTime.now();
-      lastComment = 'No Comment';
-    }
+    loadCategoriesAndInitialize();
+    loadTransactionsAndInitialize();
   }
+
+
+
+  Future<void> loadCategoriesAndInitialize() async {
+    List<CategoryNew> categories = await getCategories();
+    print("Loaded categories from SharedPreferences: $categories");
+
+    List<Category> expensesList = categories.where((category) => category.type == 'expenses').map((category) => Category(category.name, category.value)).toList();
+    List<Category> incomeList = categories.where((category) => category.type == 'income').map((category) => Category(category.name, category.value)).toList();
+
+    setState(() {
+      Expenses.instance.expenses = expensesList;
+      Income.instance.income = incomeList;
+      expenses = Expenses.instance.expenses;
+      income = Income.instance.income;
+
+      // Проверка значений после обновления состояния
+      print("After setState - expenses: $expenses, income: $income");
+    });
+  }
+
+
+
+  Future<void> loadTransactionsAndInitialize() async {
+    List<Transaction> transactions = await getTransactions();
+    setState(() {
+      history = transactions;
+      History.instance.history = transactions;
+      if (history.isNotEmpty) {
+        final lastTransaction = history.last;
+        lastCategory = lastTransaction.categoryName;
+        lastAmount = lastTransaction.amount;
+        lastDateTime = lastTransaction.transactionDate;
+        lastComment = lastTransaction.description;
+      } else {
+        lastCategory = 'No Category';
+        lastAmount = 0;
+        lastDateTime = DateTime.now();
+        lastComment = 'No Comment';
+      }
+    });
+  }
+
 
   @override
   Widget build(BuildContext context) {
+    print("Building HomePage with expenses: $expenses, income: $income"); // Логирование
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
@@ -82,7 +118,7 @@ class _HomePageState extends State<HomePage> {
                       aspectRatio: 1,
                       child: PieChart(
                         PieChartData(
-                          sections: getSections(Expenses.instance.expenses),
+                          sections: getSections(expenses),
                           centerSpaceRadius: 50,
                         ),
                       ),
@@ -109,7 +145,7 @@ class _HomePageState extends State<HomePage> {
                       aspectRatio: 1,
                       child: PieChart(
                         PieChartData(
-                          sections: getSections(Income.instance.income),
+                          sections: getSections(income),
                           centerSpaceRadius: 50,
                         ),
                       ),
@@ -205,11 +241,11 @@ class _HomePageState extends State<HomePage> {
     ];
     double sumExpenses = 0;
     for (var i = 0; i < categories.length; i++) {
-      print("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB"+categories[i].name);
+      //print("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB"+categories[i].name);
       sumExpenses += categories[i].value;
     }
     for (var i = 0; i < categories.length; i++) {
-      print("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB"+categories[i].name);
+      //print("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB"+categories[i].name);
       sectionData.add(PieChartSectionData(
         color: colors[i % colors.length],
         value: categories[i].value,

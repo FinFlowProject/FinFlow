@@ -74,7 +74,8 @@ class _AddCategoryState extends State<AddCategory> {
                   } else {
                     Expenses.instance.addValueByName(categoryName, value);
                   }
-                  saveCategory(Category(categoryName, value));
+                  saveCategory(CategoryNew(categoryName, 'expenses', value));
+                  saveTransaction(Transaction(categoryName, 'expenses', value, DateTime.now(), comment));
                   history.add(Transaction(categoryName, 'expenses', value, DateTime.now(), comment));
                 }
                 if (routeName == '/add_income/category/add_category') {
@@ -87,7 +88,8 @@ class _AddCategoryState extends State<AddCategory> {
                     income.add(Category(categoryName, 0));
                   }
                   Income.instance.addValueByName(categoryName, value);
-                  saveCategory(Category(categoryName, value));
+                  saveCategory(CategoryNew(categoryName, 'income', value));
+                  saveTransaction(Transaction(categoryName, 'income', value, DateTime.now(), comment));
                   history.add(Transaction(categoryName, 'income', value, DateTime.now(), comment));
                 }
                 Navigator.of(context).pushNamed('/');

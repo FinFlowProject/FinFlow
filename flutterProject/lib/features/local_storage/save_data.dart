@@ -47,12 +47,16 @@ void splitCategories(List<CategoryNew> categoriesNew) {
   }
 }
 
-Future<void> saveCategory(Category category) async {
+Future<void> saveCategory(CategoryNew category) async {
   final prefs = await SharedPreferences.getInstance();
-  List<String>? categories = prefs.getStringList('categories') ?? [];
+  List<String> categories = prefs.getStringList('categories') ?? [];
   categories.add(jsonEncode(category.toJson()));
   await prefs.setStringList('categories', categories);
+  print('Saved categories: $categories'); // Логирование
+
 }
+
+
 
 Future<void> deleteCategory(Category category) async {
   final prefs = await SharedPreferences.getInstance();
@@ -60,6 +64,24 @@ Future<void> deleteCategory(Category category) async {
   categories.remove(jsonEncode(category.toJson()));
   await prefs.setStringList('categories', categories);
 }
+
+
+Future<void> saveTransaction(Transaction transaction) async {
+  final prefs = await SharedPreferences.getInstance();
+  List<String> transactions = prefs.getStringList('transactions') ?? [];
+  transactions.add(jsonEncode(transaction.toJson()));
+  await prefs.setStringList('transactions', transactions);
+  print('Saved transactions: $transactions'); // Логирование
+}
+
+Future<void> deleteTransaction(Transaction transaction) async {
+  final prefs = await SharedPreferences.getInstance();
+  List<String>? transactions = prefs.getStringList('transactions') ?? [];
+  transactions.remove(jsonEncode(transaction.toJson()));
+  await prefs.setStringList('transactions', transactions);
+}
+
+
 
 Future<void> sendPatchRequest({
   required BuildContext context,
