@@ -190,9 +190,11 @@ class _HomePageState extends State<HomePage> {
     ];
     double sumExpenses = 0;
     for (var i = 0; i < categories.length; i++) {
+      print("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB"+categories[i].name);
       sumExpenses += categories[i].value;
     }
     for (var i = 0; i < categories.length; i++) {
+      print("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB"+categories[i].name);
       sectionData.add(PieChartSectionData(
         color: colors[i % colors.length],
         value: categories[i].value,

@@ -31,9 +31,9 @@ class Expenses {
     }
   }
 
-  List<Category> expenses = [
-    Category('Food', 10),
-    Category('Home', 10),
+   List<Category> expenses = [
+  //   Category('Food', 10),
+  //   Category('Home', 10),
     //Category('Health', 0),
     //Category('Gifts', 0),
     //Category('Add category', 0)
@@ -54,10 +54,10 @@ class Income {
   }
 
   List<Category> income = [
-    Category('Salary', 15),
-    Category('Deposits', 10),
-    Category('Presents', 0),
-    Category('Lottery', 0),
+  //   Category('Salary', 15),
+  //   Category('Deposits', 10),
+  //   Category('Presents', 10),
+  //   Category('Lottery', 10),
   ];
 }
 

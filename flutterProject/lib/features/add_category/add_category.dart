@@ -20,6 +20,22 @@ class _AddCategoryState extends State<AddCategory> {
 
   final TextEditingController _controller = TextEditingController();
 
+  final Category addCategory = Category('Add category', 0);
+
+  @override
+  void initState() {
+    super.initState();
+    expenses.remove(addCategory);
+    income.remove(addCategory);
+  }
+
+  @override
+  void dispose() {
+    expenses.remove(addCategory);
+    income.remove(addCategory);
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final routeName = ModalRoute.of(context)!.settings.name;
@@ -52,9 +68,11 @@ class _AddCategoryState extends State<AddCategory> {
                     }
                   }
                   if (!containsName) {
-                    expenses.add(Category(categoryName, 0));
+                    expenses.add(Category(categoryName, value));
+                   // print('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAa'+expenses[1].name);
+                  } else {
+                    Expenses.instance.addValueByName(categoryName, value);
                   }
-                  Expenses.instance.addValueByName(categoryName, value);
                 }
                 if (routeName == '/add_income/category/add_category') {
                   for (var i in income) {
