@@ -38,7 +38,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  fl_chart: ^0.70.0
+  fl_chart: ^0.69.2
   dio: ^5.7.0
   crypto: ^3.0.6
   shared_preferences: ^2.3.4

@@ -121,19 +121,6 @@ class Transaction {
   };
 }
 
-Future<void> saveTransaction(Transaction transaction) async {
-  final prefs = await SharedPreferences.getInstance();
-  List<String>? transactions = prefs.getStringList('transactions') ?? [];
-  transactions.add(jsonEncode(transaction.toJson()));
-  await prefs.setStringList('transactions', transactions);
-}
-
-Future<void> deleteTransaction(Transaction transaction) async {
-  final prefs = await SharedPreferences.getInstance();
-  List<String>? transactions = prefs.getStringList('transactions') ?? [];
-  transactions.remove(jsonEncode(transaction.toJson()));
-  await prefs.setStringList('transactions', transactions);
-}
 
 class FinFlow extends StatelessWidget {
   const FinFlow({super.key});

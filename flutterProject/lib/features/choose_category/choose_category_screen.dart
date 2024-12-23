@@ -3,6 +3,8 @@
 import 'package:finflow/fin_flow_app.dart';
 import 'package:flutter/material.dart';
 
+import '../local_storage/save_data.dart';
+
 class ChooseCategory extends StatefulWidget {
   const ChooseCategory({super.key, required this.title});
 
@@ -129,10 +131,14 @@ class _ChooseCategoryState extends State<ChooseCategory> {
           arguments: args);
     } else {
       if (ModalRoute.of(context)!.settings.name == '/add_expenses/category') {
+        saveCategory(CategoryNew(cellContent, 'expenses', value));
         Expenses.instance.addValueByName(cellContent, value);
+        saveTransaction(Transaction(cellContent, 'expenses', value, DateTime.now(), comment));
         history.add(Transaction(cellContent, 'expenses', value, DateTime.now(), comment));
       } else {
+        saveCategory(CategoryNew(cellContent, 'income', value));
         Income.instance.addValueByName(cellContent, value);
+        saveTransaction(Transaction(cellContent, 'income', value, DateTime.now(), comment));
         history.add(Transaction(cellContent, 'income', value, DateTime.now(), comment));
       }
       Navigator.of(context).pushNamed('/');
